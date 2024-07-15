@@ -4,6 +4,8 @@ import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/entities/user.entity';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { JwtStrategy } from './jwt.strategy';
       secret: process.env.jwt_secret_access,
       signOptions: { expiresIn: '5m' },
     }),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
