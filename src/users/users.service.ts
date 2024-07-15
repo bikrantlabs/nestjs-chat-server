@@ -6,16 +6,15 @@ import { User, UserDocument } from 'src/entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getUser(email: string): Promise<UserDocument | undefined> {
-    const user = await this.userModel
-      .findOne({
-        email,
-      })
-      .exec();
+    const user = await this.userModel.findOne({
+      email,
+    });
 
-    return user ? user : undefined;
+    delete user.password;
+    return user;
   }
   async createUser({
     email,
