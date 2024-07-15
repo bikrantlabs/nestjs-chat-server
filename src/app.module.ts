@@ -7,6 +7,10 @@ import { UsersModule } from './users/users.module';
 import { AuthController } from './auth/auth.controller';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './entities/user.entity';
+import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -19,8 +23,10 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.jwt_secret_access,
       signOptions: { expiresIn: '5m' },
     }),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  controllers: [AppController, AuthController, UsersController],
+  providers: [AppService, AuthService, UsersService],
 })
 export class AppModule {}
