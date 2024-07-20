@@ -14,5 +14,8 @@ export class RegisterUserDto extends LoginUserDto {
   @IsNotEmpty()
   username: string;
 
+  @IsOptional()
+  avatar?: string;
+
   // profilePicture: any;
 }

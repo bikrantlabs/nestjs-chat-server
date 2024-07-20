@@ -44,6 +44,11 @@ export class FileService {
     const fileUrl = `/public/uploads/${saveLocation}/${fileName}`;
     return fileUrl;
   }
+  async deleteFile(relativePath: string) {
+    const file = join(__dirname, '..', '..', relativePath);
+    console.log(`🔥 file.service.ts:49 ~ File to be deleted: ~`, file);
+    await fsPromises.unlink(file);
+  }
 
   getFileSaveLocation(fileType: FileType): string {
     if (fileType === FileType.Avatar) return 'avatars';

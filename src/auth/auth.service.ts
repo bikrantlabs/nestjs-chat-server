@@ -7,7 +7,6 @@ import { User } from 'src/entities/user.entity';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { FileService } from 'src/file/file.service';
-import { FileType } from 'src/file/types';
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,21 +23,20 @@ export class AuthService {
     if (userExists) {
       throw new BadRequestException('Email already registered');
     }
-
+    let avatar: string;
     if (file) {
       // console.log(`🔥 auth.service.ts:26 ~ File Received ~`, file);
-      const path = await this.fileService.saveFile(file, {
-        filetype: FileType.Video,
-      });
-      console.log(`🔥 auth.service.ts:30 ~ Upload path ~`, path);
+      avatar = await this.usersService.uploadAvatar(file);
     }
 
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
+
     return this.usersService.createUser({
       email,
       password: hash,
       username,
+      avatar,
     });
   }
   async login({
