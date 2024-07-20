@@ -13,4 +13,6 @@ export class LoginUserDto {
 export class RegisterUserDto extends LoginUserDto {
   @IsNotEmpty()
   username: string;
+
+  // profilePicture: any;
 }
