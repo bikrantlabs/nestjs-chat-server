@@ -6,26 +6,40 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/entities/user.entity';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { FileService } from 'src/file/file.service';
+import { FileType } from 'src/file/types';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private fileService: FileService,
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
-  async register({
-    email,
-    password,
-    username,
-  }: RegisterUserDto): Promise<User> {
+  async register(
+    { email, password, username }: RegisterUserDto,
+    file?: Express.Multer.File,
+  ): Promise<User> {
     const userExists = await this.usersService.getUser(email);
     if (userExists) {
       throw new BadRequestException('Email already registered');
     }
-    // TODO: hash password
+
+    if (file) {
+      // console.log(`🔥 auth.service.ts:26 ~ File Received ~`, file);
+      const path = await this.fileService.saveFile(file, {
+        filetype: FileType.Video,
+      });
+      console.log(`🔥 auth.service.ts:30 ~ Upload path ~`, path);
+    }
+
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
-    return this.usersService.createUser({ email, password: hash, username });
+    return this.usersService.createUser({
+      email,
+      password: hash,
+      username,
+    });
   }
   async login({
     email,

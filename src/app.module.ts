@@ -11,6 +11,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
+import { FileService } from './file/file.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,8 +28,12 @@ import { UsersService } from './users/users.service';
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/public',
+    }),
   ],
   controllers: [AppController, AuthController, UsersController],
-  providers: [AppService, AuthService, UsersService],
+  providers: [AppService, AuthService, UsersService, FileService],
 })
 export class AppModule {}

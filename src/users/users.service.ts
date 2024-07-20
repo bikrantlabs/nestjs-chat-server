@@ -12,7 +12,7 @@ export class UsersService {
     const user = await this.userModel.findOne({
       email,
     });
-
+    if (!user) return undefined;
     delete user.password;
     return user;
   }
