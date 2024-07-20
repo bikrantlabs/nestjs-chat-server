@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
-import { HydratedDocument } from 'mongoose';
+import { IsArray, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -23,6 +23,21 @@ export class User {
   @Prop()
   @IsOptional()
   avatar?: string;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  @IsArray()
+  @IsOptional()
+  friendIds?: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  @IsArray()
+  @IsOptional()
+  receivedFriendRequests?: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  @IsArray()
+  @IsOptional()
+  sentFriendRequests?: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

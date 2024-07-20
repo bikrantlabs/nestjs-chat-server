@@ -14,9 +14,12 @@ export class UsersService {
   ) {}
 
   async getUser(email: string): Promise<UserDocument | undefined> {
-    const user = await this.userModel.findOne({
-      email,
-    });
+    const user = await this.userModel
+      .findOne({
+        email,
+      })
+      .populate('sentFriendRequests')
+      .exec();
     if (!user) return undefined;
     delete user.password;
     return user;
@@ -61,5 +64,33 @@ export class UsersService {
       );
     }
     return newFilePath;
+  }
+
+  async sendFriendRequest(
+    senderId: string,
+    receiverId: string,
+  ): Promise<UserDocument> {
+    await this.userModel
+      .findByIdAndUpdate(
+        senderId,
+        {
+          $addToSet: { sentFriendRequests: receiverId },
+        },
+        {
+          new: true,
+        },
+      )
+      .exec();
+    return await this.userModel
+      .findByIdAndUpdate(
+        receiverId,
+        {
+          $addToSet: { receivedFriendRequests: senderId },
+        },
+        {
+          new: true,
+        },
+      )
+      .exec();
   }
 }
