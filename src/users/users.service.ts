@@ -93,4 +93,32 @@ export class UsersService {
       )
       .exec();
   }
+
+  async acceptFriendRequest(
+    currentUser: string,
+    requestId: string,
+  ): Promise<UserDocument> {
+    await this.userModel
+      .findByIdAndUpdate(
+        requestId,
+        {
+          $addToSet: { friendIds: currentUser },
+        },
+        {
+          new: true,
+        },
+      )
+      .exec();
+    return await this.userModel
+      .findByIdAndUpdate(
+        currentUser,
+        {
+          $addToSet: { friendIds: requestId },
+        },
+        {
+          new: true,
+        },
+      )
+      .exec();
+  }
 }

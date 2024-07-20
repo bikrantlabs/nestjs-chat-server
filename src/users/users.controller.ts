@@ -2,8 +2,8 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Me } from './user.decorator';
 import { UsersService } from './users.service';
-import { SendFriendRequestDto } from './dto';
-import { Model } from 'mongoose';
+import { AcceptFriendRequestDto, SendFriendRequestDto } from './dto';
+
 import { UserDocument } from 'src/entities/user.entity';
 
 @Controller('users')
@@ -26,4 +26,16 @@ export class UsersController {
       dto.receiverId,
     );
   }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('send-friend-request')
+  async acceptFriendRequest(
+    @Me() me: UserDocument,
+    @Body() dto: AcceptFriendRequestDto,
+  ) {
+    return this.usersService.acceptFriendRequest(
+      me._id.toString(),
+      dto.requestId,
+    );
+  }
 }
+// Kaluwa1 = 669bf0c28c8f5ad688277641
