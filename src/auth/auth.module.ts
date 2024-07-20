@@ -7,6 +7,10 @@ import { JwtStrategy } from './jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/entities/user.entity';
 import { FileModule } from 'src/file/file.module';
+import {
+  VerificationToken,
+  VerificationTokenSchema,
+} from 'src/entities/verification-token.entity';
 
 @Module({
   imports: [
@@ -16,7 +20,10 @@ import { FileModule } from 'src/file/file.module';
       secret: process.env.jwt_secret_access,
       signOptions: { expiresIn: '5m' },
     }),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: VerificationToken.name, schema: VerificationTokenSchema },
+    ]),
     FileModule,
   ],
   providers: [AuthService, JwtStrategy],

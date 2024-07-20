@@ -19,3 +19,7 @@ export class RegisterUserDto extends LoginUserDto {
 
   // profilePicture: any;
 }
+
+export class VerifyEmailDto {
+  token: string;
+}
