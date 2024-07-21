@@ -1,5 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsArray, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
@@ -12,7 +19,7 @@ export class User {
   @IsNotEmpty()
   username: string;
 
-  @Prop()
+  @Prop({ unique: true })
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -23,6 +30,10 @@ export class User {
   @Prop()
   @IsOptional()
   avatar?: string;
+
+  @Prop({ default: null })
+  @IsDate()
+  emailVerified?: Date;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
   @IsArray()
