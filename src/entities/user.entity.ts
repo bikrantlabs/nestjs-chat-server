@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -30,9 +31,9 @@ export class User {
   @IsOptional()
   avatar?: string;
 
-  @Prop({ default: false })
-  @IsBoolean()
-  emailVerified?: boolean;
+  @Prop({ default: null })
+  @IsDate()
+  emailVerified?: Date;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
   @IsArray()

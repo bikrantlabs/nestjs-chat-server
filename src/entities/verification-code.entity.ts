@@ -2,24 +2,24 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsDate, IsEmail, IsNotEmpty } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
-export type VerificationTokenDocument = HydratedDocument<VerificationToken>;
+export type VerificationCodeDocument = HydratedDocument<VerificationCode>;
 
 @Schema({
   timestamps: true,
 })
-export class VerificationToken {
+export class VerificationCode {
   @Prop({ unique: true })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @Prop({ unique: true })
-  token: string;
+  code: string;
 
   @Prop()
   @IsDate()
   expires: Date;
 }
 
-export const VerificationTokenSchema =
-  SchemaFactory.createForClass(VerificationToken);
+export const VerificationCodeSchema =
+  SchemaFactory.createForClass(VerificationCode);

@@ -21,5 +21,5 @@ export class RegisterUserDto extends LoginUserDto {
 }
 
 export class VerifyEmailDto {
-  token: string;
+  code: string;
 }
